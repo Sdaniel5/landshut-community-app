@@ -223,13 +223,23 @@ export default function DashboardScreen({ navigation }) {
         isDark={isDark}
       />
 
-      {/* Floating Action Button */}
+      {/* Modern Floating Action Button with Gradient */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: theme.colors.primary }]}
+        style={[
+          styles.fab,
+          {
+            backgroundColor: theme.colors.primary,
+            shadowColor: theme.colors.primary,
+            shadowOpacity: 0.4,
+            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 6 },
+            elevation: 12,
+          }
+        ]}
         onPress={() => setModalVisible(true)}
-        activeOpacity={0.8}
+        activeOpacity={0.9}
       >
-        <Ionicons name="add" size={30} color="white" />
+        <Ionicons name="add" size={32} color="white" />
       </TouchableOpacity>
 
       {/* License Plate Detector */}
@@ -397,97 +407,115 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  // Modern FAB with premium feel
   fab: {
     position: 'absolute',
-    right: 20,
-    bottom: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    right: 24,
+    bottom: 24,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
   },
+  // Professional modal overlay
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
+  // Enhanced modal content
   modalContent: {
-    width: '90%',
-    maxWidth: 400,
-    borderRadius: 24,
-    padding: 25,
-    elevation: 10,
+    width: '100%',
+    maxWidth: 420,
+    borderRadius: 20,
+    padding: 28,
+    elevation: 24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.4,
+    shadowRadius: 24,
   },
+  // Modern typography for title
   modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 26,
+    fontWeight: '700',
+    marginBottom: 24,
     textAlign: 'center',
+    letterSpacing: -0.5,
   },
+  // Sleek type selector
   typeSelector: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    gap: 10,
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    gap: 12,
   },
+  // Premium type buttons
   typeButton: {
     flex: 1,
-    padding: 14,
-    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    borderRadius: 14,
     alignItems: 'center',
+    minHeight: 56,
+    justifyContent: 'center',
   },
   typeButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 0.2,
   },
+  // Modern input fields
   input: {
-    borderRadius: 12,
-    borderWidth: 1,
-    padding: 15,
-    marginBottom: 15,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    marginBottom: 16,
     fontSize: 16,
+    fontWeight: '400',
   },
   textArea: {
-    height: 90,
+    height: 100,
     textAlignVertical: 'top',
+    paddingTop: 16,
   },
+  // Success indicator
   plateConfirmed: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 15,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginBottom: 16,
   },
   plateConfirmedText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: 10,
+    fontSize: 15,
     fontWeight: '600',
+    letterSpacing: 0.1,
   },
+  // Action buttons
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
-    gap: 12,
+    marginTop: 12,
+    gap: 14,
   },
   button: {
     flex: 1,
-    padding: 16,
-    borderRadius: 12,
+    paddingVertical: 18,
+    borderRadius: 14,
     alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 56,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
 });

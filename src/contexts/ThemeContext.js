@@ -41,38 +41,54 @@ export const ThemeProvider = ({ children }) => {
   const theme = {
     isDark,
     colors: {
-      // Background colors
-      background: isDark ? '#121212' : '#FFFFFF',
-      card: isDark ? '#1E1E1E' : '#F5F5F5',
-      cardElevated: isDark ? '#2A2A2A' : '#FFFFFF',
-      
-      // Text colors
-      text: isDark ? '#FFFFFF' : '#000000',
-      textSecondary: isDark ? '#B0B0B0' : '#666666',
-      textTertiary: isDark ? '#888888' : '#999999',
-      
-      // Border colors
-      border: isDark ? '#272727' : '#E0E0E0',
-      borderLight: isDark ? '#1A1A1A' : '#F0F0F0',
-      
-      // Primary colors
-      primary: '#2196F3',
-      primaryDark: '#1976D2',
-      primaryLight: '#64B5F6',
-      
-      // Status colors
-      success: '#4CAF50',
-      warning: '#FF9800',
-      error: '#F44336',
-      info: '#2196F3',
-      
-      // Glassmorphism (Enhanced for "Glass-for-me")
-      glassBackground: isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.7)',
-      glassBorder: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+      // Modern Tech Background (darker, richer)
+      background: isDark ? '#0A0E17' : '#F8F9FA',
+      card: isDark ? '#141824' : '#FFFFFF',
+      cardElevated: isDark ? '#1A1F2E' : '#FFFFFF',
+      cardHover: isDark ? '#1F2535' : '#F0F2F5',
 
-      // Overlay
-      overlay: 'rgba(0, 0, 0, 0.5)',
-      overlayLight: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+      // Premium Text colors
+      text: isDark ? '#FFFFFF' : '#1A1D29',
+      textSecondary: isDark ? '#A0AEC0' : '#4A5568',
+      textTertiary: isDark ? '#718096' : '#718096',
+      textMuted: isDark ? '#4A5568' : '#A0AEC0',
+
+      // Sleek Borders
+      border: isDark ? '#2D3748' : '#E2E8F0',
+      borderLight: isDark ? '#1F2735' : '#EDF2F7',
+      borderAccent: isDark ? '#4A5568' : '#CBD5E0',
+
+      // Modern Primary (Electric Blue with tech vibe)
+      primary: '#3B82F6',
+      primaryDark: '#2563EB',
+      primaryLight: '#60A5FA',
+      primaryGlow: 'rgba(59, 130, 246, 0.3)',
+
+      // Status colors (more vibrant)
+      success: '#10B981',
+      successGlow: 'rgba(16, 185, 129, 0.2)',
+      warning: '#F59E0B',
+      warningGlow: 'rgba(245, 158, 11, 0.2)',
+      error: '#EF4444',
+      errorGlow: 'rgba(239, 68, 68, 0.2)',
+      info: '#3B82F6',
+
+      // Enhanced Glassmorphism (Premium feel)
+      glassBackground: isDark ? 'rgba(20, 24, 36, 0.92)' : 'rgba(255, 255, 255, 0.85)',
+      glassBorder: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)',
+      glassHighlight: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.95)',
+
+      // Modern Overlays
+      overlay: 'rgba(0, 0, 0, 0.6)',
+      overlayLight: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
+      overlayHeavy: isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.4)',
+
+      // Accent gradients
+      gradientPrimary: isDark
+        ? ['#3B82F6', '#2563EB']
+        : ['#60A5FA', '#3B82F6'],
+      gradientSuccess: ['#10B981', '#059669'],
+      gradientWarning: ['#F59E0B', '#D97706'],
     },
 
     // Neon accent system
@@ -106,6 +122,111 @@ export const ThemeProvider = ({ children }) => {
       shadowOpacity: isDark ? 0.3 : 0.1,
       shadowRadius: 4,
       elevation: 4,
+    },
+
+    // Modern Typography System
+    typography: {
+      // Display (Hero text)
+      displayLarge: {
+        fontSize: 40,
+        fontWeight: '700',
+        lineHeight: 48,
+        letterSpacing: -0.5,
+      },
+      display: {
+        fontSize: 32,
+        fontWeight: '700',
+        lineHeight: 40,
+        letterSpacing: -0.25,
+      },
+
+      // Headings
+      h1: {
+        fontSize: 28,
+        fontWeight: '700',
+        lineHeight: 36,
+      },
+      h2: {
+        fontSize: 24,
+        fontWeight: '600',
+        lineHeight: 32,
+      },
+      h3: {
+        fontSize: 20,
+        fontWeight: '600',
+        lineHeight: 28,
+      },
+      h4: {
+        fontSize: 18,
+        fontWeight: '600',
+        lineHeight: 26,
+      },
+
+      // Body text
+      bodyLarge: {
+        fontSize: 17,
+        fontWeight: '400',
+        lineHeight: 26,
+      },
+      body: {
+        fontSize: 15,
+        fontWeight: '400',
+        lineHeight: 22,
+      },
+      bodySmall: {
+        fontSize: 13,
+        fontWeight: '400',
+        lineHeight: 20,
+      },
+
+      // Labels & Captions
+      label: {
+        fontSize: 14,
+        fontWeight: '500',
+        lineHeight: 20,
+        letterSpacing: 0.1,
+      },
+      caption: {
+        fontSize: 12,
+        fontWeight: '400',
+        lineHeight: 18,
+      },
+      overline: {
+        fontSize: 11,
+        fontWeight: '500',
+        lineHeight: 16,
+        letterSpacing: 0.5,
+        textTransform: 'uppercase',
+      },
+
+      // Special
+      button: {
+        fontSize: 15,
+        fontWeight: '600',
+        lineHeight: 20,
+        letterSpacing: 0.2,
+      },
+    },
+
+    // Modern Spacing System (8px base)
+    spacing: {
+      xs: 4,
+      sm: 8,
+      md: 16,
+      lg: 24,
+      xl: 32,
+      xxl: 40,
+      xxxl: 48,
+    },
+
+    // Border Radius System
+    radius: {
+      none: 0,
+      sm: 6,
+      md: 12,
+      lg: 16,
+      xl: 24,
+      full: 9999,
     },
   };
 

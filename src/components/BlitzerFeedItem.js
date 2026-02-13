@@ -103,73 +103,83 @@ export default function BlitzerFeedItem({ report, onVote, onPress }) {
 }
 
 const styles = StyleSheet.create({
+  // Premium card spacing
   cardContainer: {
-    marginHorizontal: 15,
-    marginVertical: 8,
+    marginHorizontal: 16,
+    marginVertical: 10,
   },
   cardContent: {
-    padding: 15,
+    padding: 18,
   },
+  // Modern header layout
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   headerText: {
     flex: 1,
   },
+  // Premium typography
   street: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
+    fontSize: 19,
+    fontWeight: '700',
+    marginBottom: 5,
+    letterSpacing: -0.3,
   },
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
   timeAgo: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#999',
-    marginRight: 8,
+    fontWeight: '500',
   },
   sourceBadge: {
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   sourceBadgeText: {
     color: 'white',
-    fontSize: 10,
-    fontWeight: 'bold',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   description: {
-    fontSize: 14,
-    marginBottom: 10,
-    lineHeight: 20,
+    fontSize: 15,
+    marginBottom: 12,
+    lineHeight: 22,
+    fontWeight: '400',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 4,
   },
+  // Modern vote button
   voteButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   voteText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginLeft: 6,
+    fontSize: 15,
+    fontWeight: '700',
+    marginLeft: 7,
+    letterSpacing: 0.2,
   },
 });
