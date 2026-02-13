@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, useColorScheme, TouchableOpacity, Modal, TextInput, Text, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Modal, TextInput, Text, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapHeaderCard from '../components/MapHeaderCard';
 import BlitzerFeedList from '../components/BlitzerFeedList';
+import LicensePlateDetector from '../components/LicensePlateDetector';
 import { supabase } from '../lib/supabase';
+import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 import * as Location from 'expo-location';
 
 export default function DashboardScreen({ navigation }) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { theme, isDark } = useTheme();
+  const { user } = useAuth();
   
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [licenseWarningAccepted, setLicenseWarningAccepted] = useState(false);
+  const [detectedPlates, setDetectedPlates] = useState([]);
   const [formData, setFormData] = useState({
     type: 'blitzer',
     street: '',
     description: '',
+    licensePlate: '',
   });
 
   useEffect(() => {
@@ -131,9 +137,39 @@ export default function DashboardScreen({ navigation }) {
     fetchReports();
   };
 
+  const handleLicensePlateDetected = (plates) => {
+    setDetectedPlates(plates);
+    if (plates.length > 0) {
+      setFormData({ ...formData, licensePlate: plates[0] });
+    }
+  };
+
+  const handleWarningAccepted = () => {
+    setLicenseWarningAccepted(true);
+  };
+
   const handleSubmitReport = async () => {
+    // Check if user is logged in
+    if (!user) {
+      Alert.alert(
+        'Anmeldung erforderlich',
+        'Bitte melde dich an, um Blitzer zu melden.',
+        [
+          { text: 'Abbrechen', style: 'cancel' },
+          { text: 'Anmelden', onPress: () => navigation.navigate('Auth') },
+        ]
+      );
+      return;
+    }
+
     if (!formData.street.trim()) {
       Alert.alert('Fehler', 'Bitte geben Sie die Straße ein.');
+      return;
+    }
+
+    // Check if license plate was detected for Zivil but warning not accepted
+    if (formData.type === 'zivilstreife' && detectedPlates.length > 0 && !licenseWarningAccepted) {
+      Alert.alert('Warnung', 'Bitte bestätige die Warnung zum Kennzeichen.');
       return;
     }
 
@@ -148,8 +184,11 @@ export default function DashboardScreen({ navigation }) {
             type: formData.type,
             street: formData.street,
             description: formData.description,
+            license_plate: formData.type === 'zivilstreife' ? formData.licensePlate : null,
             coordinates: `POINT(${coords.longitude} ${coords.latitude})`,
             votes: 0,
+            user_id: user.id,
+            karma: 0,
           },
         ]);
 
@@ -157,7 +196,9 @@ export default function DashboardScreen({ navigation }) {
 
       Alert.alert('Erfolg', 'Blitzer wurde gemeldet!');
       setModalVisible(false);
-      setFormData({ type: 'blitzer', street: '', description: '' });
+      setFormData({ type: 'blitzer', street: '', description: '', licensePlate: '' });
+      setDetectedPlates([]);
+      setLicenseWarningAccepted(false);
       fetchReports();
     } catch (error) {
       Alert.alert('Fehler', 'Meldung konnte nicht erstellt werden.');
@@ -166,7 +207,7 @@ export default function DashboardScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#121212' : '#F5F5F5' }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <MapHeaderCard 
         reports={reports}
         onExpand={handleExpandMap}
@@ -184,12 +225,20 @@ export default function DashboardScreen({ navigation }) {
 
       {/* Floating Action Button */}
       <TouchableOpacity
-        style={styles.fab}
+        style={[styles.fab, { backgroundColor: theme.colors.primary }]}
         onPress={() => setModalVisible(true)}
         activeOpacity={0.8}
       >
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
+
+      {/* License Plate Detector */}
+      <LicensePlateDetector
+        vehicleType={formData.type}
+        description={formData.description}
+        onLicensePlateDetected={handleLicensePlateDetected}
+        onWarningAccepted={handleWarningAccepted}
+      />
 
       {/* Report Modal */}
       <Modal
@@ -199,8 +248,8 @@ export default function DashboardScreen({ navigation }) {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: isDark ? '#1E1E1E' : '#FFF' }]}>
-            <Text style={[styles.modalTitle, { color: isDark ? '#FFF' : '#000' }]}>
+          <View style={[styles.modalContent, { backgroundColor: theme.colors.cardElevated }]}>
+            <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
               Blitzer melden
             </Text>
 
@@ -208,59 +257,92 @@ export default function DashboardScreen({ navigation }) {
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  formData.type === 'blitzer' && styles.typeButtonActive,
+                  { 
+                    backgroundColor: formData.type === 'blitzer' ? theme.colors.primary : theme.colors.border
+                  }
                 ]}
-                onPress={() => setFormData({ ...formData, type: 'blitzer' })}
+                onPress={() => {
+                  setFormData({ ...formData, type: 'blitzer' });
+                  setDetectedPlates([]);
+                  setLicenseWarningAccepted(false);
+                }}
               >
-                <Text style={styles.typeButtonText}>📸 Blitzer</Text>
+                <Text style={[styles.typeButtonText, { 
+                  color: formData.type === 'blitzer' ? '#FFF' : theme.colors.text 
+                }]}>
+                  📸 Blitzer
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  formData.type === 'zivilstreife' && styles.typeButtonActive,
+                  { 
+                    backgroundColor: formData.type === 'zivilstreife' ? theme.colors.primary : theme.colors.border
+                  }
                 ]}
-                onPress={() => setFormData({ ...formData, type: 'zivilstreife' })}
+                onPress={() => {
+                  setFormData({ ...formData, type: 'zivilstreife' });
+                }}
               >
-                <Text style={styles.typeButtonText}>👮 Zivilstreife</Text>
+                <Text style={[styles.typeButtonText, { 
+                  color: formData.type === 'zivilstreife' ? '#FFF' : theme.colors.text 
+                }]}>
+                  👮 Zivilstreife
+                </Text>
               </TouchableOpacity>
             </View>
 
             <TextInput
               style={[styles.input, { 
-                backgroundColor: isDark ? '#2A2A2A' : '#F5F5F5', 
-                color: isDark ? '#FFF' : '#000' 
+                backgroundColor: theme.colors.card, 
+                color: theme.colors.text,
+                borderColor: theme.colors.border 
               }]}
               placeholder="Straße (z.B. Altstadt 15)"
-              placeholderTextColor={isDark ? '#888' : '#666'}
+              placeholderTextColor={theme.colors.textTertiary}
               value={formData.street}
               onChangeText={(text) => setFormData({ ...formData, street: text })}
             />
 
             <TextInput
               style={[styles.input, styles.textArea, { 
-                backgroundColor: isDark ? '#2A2A2A' : '#F5F5F5', 
-                color: isDark ? '#FFF' : '#000' 
+                backgroundColor: theme.colors.card, 
+                color: theme.colors.text,
+                borderColor: theme.colors.border 
               }]}
-              placeholder="Details (optional)"
-              placeholderTextColor={isDark ? '#888' : '#666'}
+              placeholder={formData.type === 'zivilstreife' ? 'Details & Kennzeichen (z.B. LA-AB 1234)' : 'Details (optional)'}
+              placeholderTextColor={theme.colors.textTertiary}
               value={formData.description}
               onChangeText={(text) => setFormData({ ...formData, description: text })}
               multiline
               numberOfLines={3}
             />
 
+            {detectedPlates.length > 0 && licenseWarningAccepted && (
+              <View style={[styles.plateConfirmed, { backgroundColor: theme.colors.success + '20' }]}>
+                <Ionicons name="checkmark-circle" size={20} color={theme.colors.success} />
+                <Text style={[styles.plateConfirmedText, { color: theme.colors.success }]}>
+                  Kennzeichen erkannt: {detectedPlates[0]}
+                </Text>
+              </View>
+            )}
+
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.button, styles.buttonCancel]}
-                onPress={() => setModalVisible(false)}
+                style={[styles.button, { backgroundColor: theme.colors.border }]}
+                onPress={() => {
+                  setModalVisible(false);
+                  setDetectedPlates([]);
+                  setLicenseWarningAccepted(false);
+                }}
               >
-                <Text style={styles.buttonText}>Abbrechen</Text>
+                <Text style={[styles.buttonText, { color: theme.colors.text }]}>Abbrechen</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.button, styles.buttonSubmit]}
+                style={[styles.button, { backgroundColor: theme.colors.primary }]}
                 onPress={handleSubmitReport}
               >
-                <Text style={styles.buttonText}>Melden</Text>
+                <Text style={[styles.buttonText, { color: '#FFF' }]}>Melden</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -281,7 +363,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#2196F3',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
@@ -292,19 +373,20 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalContent: {
-    width: '85%',
-    borderRadius: 20,
+    width: '90%',
+    maxWidth: 400,
+    borderRadius: 24,
     padding: 25,
-    elevation: 5,
+    elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
   },
   modalTitle: {
     fontSize: 24,
@@ -316,25 +398,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
+    gap: 10,
   },
   typeButton: {
     flex: 1,
     padding: 14,
-    marginHorizontal: 5,
     borderRadius: 12,
-    backgroundColor: '#E0E0E0',
     alignItems: 'center',
-  },
-  typeButtonActive: {
-    backgroundColor: '#2196F3',
   },
   typeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
   },
   input: {
     borderRadius: 12,
+    borderWidth: 1,
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
@@ -343,26 +421,31 @@ const styles = StyleSheet.create({
     height: 90,
     textAlignVertical: 'top',
   },
+  plateConfirmed: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  plateConfirmedText: {
+    marginLeft: 8,
+    fontSize: 14,
+    fontWeight: '600',
+  },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
+    gap: 12,
   },
   button: {
     flex: 1,
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  buttonCancel: {
-    backgroundColor: '#757575',
-  },
-  buttonSubmit: {
-    backgroundColor: '#2196F3',
   },
   buttonText: {
-    color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -1,191 +1,246 @@
-# 📍 Landshut Community App - Blitzer & Community Feed
+# Landshut Community App v2.0 🚀
 
-Eine React Native/Expo Community-App für Landshut mit Echtzeit-Blitzer-Meldungen und lokalem Chat.
+A modern, feature-rich community platform for Landshut with real-time speed camera alerts, community features, and glassmorphism design.
+
+![React Native](https://img.shields.io/badge/React_Native-0.74-blue)
+![Expo](https://img.shields.io/badge/Expo-51.0-black)
+![Supabase](https://img.shields.io/badge/Supabase-✓-green)
 
 ## ✨ Features
 
-### 🗺️ Interactive Karte
-- Full-Screen Map mit Landshut Fokus
-- Blitzer & Zivilstreifen in Echtzeit
-- Eigene Meldungen mit Straße, Typ und Details
-- Voting-System (15 Votes → Marker verschwindet automatisch)
+### 🎨 Modern Design
+- **Glassmorphism UI** - Frosted glass effects throughout the app
+- **Dark/Light Mode** - Smooth theme transitions with persistent preference
+- **Brutal Modern Navbar** - Animated bottom navigation with glassmorphism
+- **Smooth Animations** - Page transitions and micro-interactions using Reanimated 3
 
-### 💬 Community Feed
-- Lokaler Chat für die Landshut Community
-- Bad-Words Filter (Deutsch)
-- Echtzeit-Synchronisation via Supabase
-- Anonyme oder authentifizierte Nutzung
+### 📍 Core Functionality
+- **Real-time Speed Camera Reports** - Community-driven blitzer alerts
+- **Interactive Map** - View all reports with filtering options
+- **Live Feed** - Community chat and updates
+- **Location-based** - Automatic GPS positioning for accurate reports
 
-### ⚙️ Settings
-- Push-Benachrichtigungen konfigurieren
-- Dark Mode (automatisch)
-- Über, Datenschutz, Hilfe
+### 👤 User System
+- **Authentication** - Supabase Auth with email/password
+- **User Profiles** - Username, avatar, bio, and location
+- **Profile Pictures** - Upload to Supabase Storage
+- **User Statistics** - Track your reports and karma
+- **Public Profiles** - View other users' contributions
 
-### 🎉 Landshut Specials
-- Werbe-Bereich für lokale Angebote
-- Einfach erweiterbar
+### 🚨 License Plate Detection
+- **Smart Detection** - Regex-based German license plate recognition
+- **Zivil Warning** - Automatic modal when detecting plates for undercover vehicles
+- **Safety First** - Explicit confirmation required before submission
 
-### 🔐 Datenschutz
-- ⚠️ **KEINE Kennzeichen-Speicherung!**
-- Row Level Security (RLS) auf Supabase
-- Nur authentifizierte User können melden/chatten
-- Bad-Words Filter für sichere Kommunikation
+### ❓ FAQ Section
+- **Comprehensive** - Topics: Traffic, Cameras, Legal questions
+- **Searchable** - Find answers quickly
+- **Categorized** - Organized by topic (Traffic, Cameras, Legal, App)
+- **Accordion UI** - Collapsible, smooth animations
 
-## 🚀 Setup
+### ⭐ Karma System
+- **Community Voting** - Upvote helpful reports
+- **Reputation** - Build your karma through contributions
+- **Quality Control** - Auto-delete reports at 15 votes
+- **Verification** - Community-driven accuracy
 
-### 1. Voraussetzungen
-- Node.js >= 18
-- Expo CLI: `npm install -g expo-cli`
-- Supabase Account: https://supabase.com
+### 🗺️ Map Filters
+- **Toggle Report Types** - Show/hide Blitzer, Baustelle, Kontrolle
+- **Smart Filtering** - Quick access to relevant information
 
-### 2. Installation
+### 📊 Report History
+- **Your Reports** - View all your past submissions
+- **Statistics** - Total reports and karma earned
+- **Recent Activity** - Quick access to latest reports
+
+### 🔗 Share Functionality
+- **Social Sharing** - WhatsApp, social media integration
+- **Quick Share** - One-tap sharing of reports
+
+### 📴 Offline Mode
+- **Smart Caching** - Store recent reports locally
+- **Auto-Sync** - Synchronize when back online
+- **Reliability** - Works even with poor connection
+
+## 🛠 Tech Stack
+
+- **Frontend**: React Native (Expo SDK 51)
+- **Styling**: Tailwind CSS (NativeWind) + Custom Glassmorphism
+- **Backend**: Supabase
+  - Authentication
+  - PostgreSQL Database
+  - Storage (Profile pictures)
+  - Real-time Subscriptions
+- **State Management**: React Context API + Custom Hooks
+- **Animations**: Reanimated 3 + Moti
+- **Maps**: React Native Maps
+- **Navigation**: React Navigation v6
+
+## 📦 Installation
 
 ```bash
-cd landshut-community-app-blitzer-community-feed
+# Clone the repository
+git clone https://github.com/Sdaniel5/landshut-community-app.git
+cd landshut-community-app
+
+# Install dependencies
 npm install
-```
 
-### 3. Supabase Setup
-
-1. Erstelle ein neues Projekt auf [Supabase](https://supabase.com)
-2. Führe das SQL-Schema aus:
-   - Öffne den SQL Editor in Supabase
-   - Kopiere den Inhalt von `supabase/schema.sql`
-   - Führe das SQL aus
-3. Notiere deine Supabase URL und ANON Key
-
-### 4. Konfiguration
-
-Bearbeite `src/lib/supabase.js`:
-
-```javascript
-const supabaseUrl = 'https://your-project.supabase.co';
-const supabaseAnonKey = 'your-anon-key';
-```
-
-### 5. Google Maps API (Android)
-
-Bearbeite `app.json` und füge deinen Google Maps API Key ein:
-
-```json
-"android": {
-  "config": {
-    "googleMaps": {
-      "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
-    }
-  }
-}
-```
-
-Anleitung: https://developers.google.com/maps/documentation/android-sdk/get-api-key
-
-### 6. App starten
-
-```bash
-# Development Server
+# Start the development server
 npm start
 
-# iOS Simulator (macOS)
-npm run ios
-
-# Android Emulator
+# Run on Android
 npm run android
+
+# Run on iOS
+npm run ios
 ```
 
-## 📱 Push Notifications
+## 🗄️ Database Schema
 
-Die App unterstützt Expo Push Notifications:
+### Tables
 
-**Text-Format:**
-```
-📸 Neuer Blitzer in der [Straße] ([Zusatz])
-```
-
-**Konfiguration:**
-1. Erstelle ein Expo Account
-2. Führe `eas build:configure` aus
-3. Passe `app.json` an (EAS Project ID)
-4. Teste mit Expo Push Notification Tool: https://expo.dev/notifications
-
-## 🗂️ Projektstruktur
-
-```
-landshut-community-app/
-├── App.js                          # Main App Entry
-├── app.json                        # Expo Config
-├── package.json                    # Dependencies
-├── src/
-│   ├── screens/
-│   │   ├── MapScreen.js           # Karte mit Blitzer-Meldungen
-│   │   ├── FeedScreen.js          # Community Chat
-│   │   └── SettingsScreen.js      # Einstellungen
-│   └── lib/
-│       ├── supabase.js            # Supabase Client
-│       ├── notifications.js       # Push Notifications
-│       └── badwords.js            # Bad-Words Filter
-└── supabase/
-    └── schema.sql                 # Datenbank Schema
+#### `user_profiles`
+```sql
+CREATE TABLE user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id),
+  username TEXT UNIQUE NOT NULL,
+  avatar_url TEXT,
+  bio TEXT,
+  location TEXT,
+  karma INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-## 🎨 Design
+#### `reports`
+```sql
+CREATE TABLE reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  type TEXT NOT NULL, -- 'blitzer', 'zivilstreife', 'baustelle'
+  street TEXT NOT NULL,
+  description TEXT,
+  license_plate TEXT, -- For Zivil vehicles
+  coordinates GEOGRAPHY(POINT),
+  votes INT DEFAULT 0,
+  karma INT DEFAULT 0,
+  verified BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
-- **Dark Mode:** Automatisch basierend auf System-Einstellungen
-- **Akzentfarbe:** Blau (#2196F3)
-- **Plattform:** iOS & Android native UI-Komponenten
+#### `report_votes`
+```sql
+CREATE TABLE report_votes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id UUID REFERENCES reports(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id),
+  vote_type TEXT CHECK (vote_type IN ('up', 'down')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(report_id, user_id)
+);
+```
 
-## 🛠️ Technologien
+#### `community_messages`
+```sql
+CREATE TABLE community_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  username TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
-- **Frontend:** React Native, Expo
-- **Backend:** Supabase (PostgreSQL + PostGIS + RLS)
-- **Maps:** react-native-maps
-- **Navigation:** React Navigation
-- **Push:** Expo Notifications
+### Storage Buckets
+- **avatars** - Profile pictures (public read, authenticated write)
 
-## 📊 Datenbank Schema
+## 🚀 Key Features Explained
 
-### reports
-| Spalte       | Typ                  | Beschreibung                      |
-|--------------|----------------------|-----------------------------------|
-| id           | UUID                 | Primary Key                       |
-| type         | VARCHAR(50)          | 'blitzer' oder 'zivilstreife'     |
-| street       | VARCHAR(255)         | Straßenname                       |
-| description  | TEXT                 | Optional: Details                 |
-| coordinates  | GEOGRAPHY(POINT)     | GPS-Koordinaten (PostGIS)         |
-| votes        | INTEGER              | Vote-Count (Standard: 0)          |
-| created_at   | TIMESTAMP            | Zeitstempel                       |
-| user_id      | UUID                 | Foreign Key zu auth.users         |
+### Dark/Light Mode
+The theme system uses React Context with AsyncStorage persistence:
+- Toggle in Settings
+- Smooth transitions (no flicker)
+- System-wide consistency
+- Saves preference across app restarts
 
-### community_messages
-| Spalte       | Typ                  | Beschreibung                      |
-|--------------|----------------------|-----------------------------------|
-| id           | UUID                 | Primary Key                       |
-| user_id      | UUID                 | Foreign Key zu auth.users         |
-| message      | TEXT                 | Chat-Nachricht (gefiltert)        |
-| created_at   | TIMESTAMP            | Zeitstempel                       |
+### License Plate Detector
+Automatically detects German license plates using regex:
+```javascript
+// Format: XX-YY 1234
+// XX = 1-3 letters (city code)
+// YY = 1-2 letters
+// 1234 = 1-4 digits
+```
+When "Zivil" vehicle type is selected and a plate is detected:
+1. Warning modal appears
+2. Shows detected plate(s)
+3. Requires explicit confirmation
+4. Prevents accidental false reports
 
-## 🔒 Sicherheit
+### Karma System
+- **Earn Karma**: Submit accurate reports
+- **Upvotes**: Community votes on report accuracy
+- **Reputation**: Higher karma = trusted contributor
+- **Auto-cleanup**: Reports auto-delete at 15 votes (assumed resolved)
 
-- **RLS (Row Level Security):** Nur authentifizierte User können melden/chatten
-- **Bad-Words Filter:** Deutsche Schimpfwörter werden automatisch gefiltert
-- **Keine Kennzeichen:** Datenschutz-konform (keine persönlichen Daten)
-- **Auto-Delete:** Reports mit ≥15 Votes werden automatisch gelöscht
+### FAQ System
+Content covers:
+- **Traffic Rules** - Speed limits, violations, consequences
+- **Speed Cameras** - Types, how they work, common locations
+- **Legal** - Appeals, fines, obligations
+- **App Usage** - How to use features effectively
 
-## 🚦 Rechtlicher Hinweis
+## 📱 Screenshots
 
-⚠️ **Diese App dient nur zu Informationszwecken.**
+*Coming soon*
 
-- Bitte beachten Sie die Straßenverkehrsordnung (StVO)
-- Die Nutzung von Blitzer-Apps während der Fahrt ist in Deutschland verboten
-- Verwenden Sie die App nur als Beifahrer oder vor Fahrtantritt
+## 🔐 Security & Privacy
 
-## 📝 Lizenz
+- **No License Plate Storage** (except confirmed Zivil vehicles)
+- **Anonymous Usage** possible (guest mode)
+- **EU Data Storage** only
+- **Row Level Security** (RLS) enabled on all tables
+- **Profanity Filter** on community messages
+- **GDPR Compliant**
 
-MIT License - Frei für persönliche und kommerzielle Nutzung
+## 🤝 Contributing
 
-## 🤝 Beitragen
+Contributions welcome! Please follow these steps:
 
-Contributions sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙋 Support
+
+For questions or issues:
+- Open an issue on GitHub
+- Contact via the Community feed in-app
+
+## ⚠️ Disclaimer
+
+This app is for informational purposes only. Always follow traffic laws and drive safely. The accuracy of community-reported speed cameras cannot be guaranteed.
+
+## 🎯 Roadmap
+
+- [ ] Push notifications for nearby reports
+- [ ] Advanced filtering (time-based, distance)
+- [ ] Report analytics and heatmaps
+- [ ] Community achievements/badges
+- [ ] Multi-language support
+- [ ] Integration with navigation apps
 
 ---
 
 **Made with ❤️ in Landshut**
+
+v2.0.0 - February 2026
