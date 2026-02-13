@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Switch,
   TouchableOpacity,
-  useColorScheme,
   ScrollView,
   Alert,
   Linking,
@@ -13,10 +12,10 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function SettingsScreen() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { theme, isDark, toggleTheme } = useTheme();
 
   const [pushEnabled, setPushEnabled] = useState(true);
   const [blitzerNotifications, setBlitzerNotifications] = useState(true);
@@ -109,15 +108,18 @@ export default function SettingsScreen() {
   }
 
   const SettingItem = ({ icon, title, subtitle, children }) => (
-    <View style={[styles.settingItem, { backgroundColor: isDark ? '#1E1E1E' : '#FFF' }]}>
+    <View style={[styles.settingItem, { 
+      backgroundColor: theme.colors.card,
+      borderBottomColor: theme.colors.border 
+    }]}>
       <View style={styles.settingLeft}>
-        <Ionicons name={icon} size={24} color="#2196F3" />
+        <Ionicons name={icon} size={24} color={theme.colors.primary} />
         <View style={styles.settingText}>
-          <Text style={[styles.settingTitle, { color: isDark ? '#FFF' : '#000' }]}>
+          <Text style={[styles.settingTitle, { color: theme.colors.text }]}>
             {title}
           </Text>
           {subtitle && (
-            <Text style={[styles.settingSubtitle, { color: isDark ? '#AAA' : '#666' }]}>
+            <Text style={[styles.settingSubtitle, { color: theme.colors.textSecondary }]}>
               {subtitle}
             </Text>
           )}
@@ -128,9 +130,28 @@ export default function SettingsScreen() {
   );
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#F5F5F5' }]}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: isDark ? '#AAA' : '#666' }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
+          DARSTELLUNG
+        </Text>
+
+        <SettingItem
+          icon="moon"
+          title="Dark Mode"
+          subtitle="Dunkles Design aktivieren"
+        >
+          <Switch
+            value={isDark}
+            onValueChange={toggleTheme}
+            trackColor={{ false: '#767577', true: theme.colors.primaryLight }}
+            thumbColor={isDark ? theme.colors.primary : '#f4f3f4'}
+          />
+        </SettingItem>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
           BENACHRICHTIGUNGEN
         </Text>
 
@@ -177,35 +198,35 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: isDark ? '#AAA' : '#666' }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
           INFORMATION
         </Text>
 
         <TouchableOpacity onPress={handleAbout}>
           <SettingItem icon="information-circle" title="Über die App">
-            <Ionicons name="chevron-forward" size={20} color={isDark ? '#AAA' : '#666'} />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </SettingItem>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handlePrivacy}>
           <SettingItem icon="shield-checkmark" title="Datenschutz">
-            <Ionicons name="chevron-forward" size={20} color={isDark ? '#AAA' : '#666'} />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </SettingItem>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleHelp}>
           <SettingItem icon="help-circle" title="Hilfe">
-            <Ionicons name="chevron-forward" size={20} color={isDark ? '#AAA' : '#666'} />
+            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
           </SettingItem>
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <Text style={[styles.footerText, { color: isDark ? '#666' : '#999' }]}>
+        <Text style={[styles.footerText, { color: theme.colors.textTertiary }]}>
           Made with ❤️ in Landshut
         </Text>
-        <Text style={[styles.footerText, { color: isDark ? '#666' : '#999' }]}>
-          Version 1.0.0
+        <Text style={[styles.footerText, { color: theme.colors.textTertiary }]}>
+          Version 2.0.0
         </Text>
       </View>
     </ScrollView>
