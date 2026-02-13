@@ -58,11 +58,15 @@ export const ThemeProvider = ({ children }) => {
       borderLight: isDark ? '#1F2735' : '#EDF2F7',
       borderAccent: isDark ? '#4A5568' : '#CBD5E0',
 
-      // Modern Primary (Electric Blue with tech vibe)
-      primary: '#3B82F6',
-      primaryDark: '#2563EB',
-      primaryLight: '#60A5FA',
-      primaryGlow: 'rgba(59, 130, 246, 0.3)',
+      // Modern Primary (Teal/Turquoise - travel app inspired)
+      primary: '#14B8A6', // Teal-500
+      primaryDark: '#0D9488', // Teal-600
+      primaryLight: '#5EEAD4', // Teal-300
+      primaryGlow: 'rgba(20, 184, 166, 0.3)',
+
+      // Secondary accent (Cyan for variety)
+      secondary: '#06B6D4', // Cyan-500
+      secondaryLight: '#22D3EE',
 
       // Status colors (more vibrant)
       success: '#10B981',
@@ -83,12 +87,14 @@ export const ThemeProvider = ({ children }) => {
       overlayLight: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
       overlayHeavy: isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.4)',
 
-      // Accent gradients
+      // Modern gradients (travel app inspired)
       gradientPrimary: isDark
-        ? ['#3B82F6', '#2563EB']
-        : ['#60A5FA', '#3B82F6'],
+        ? ['#14B8A6', '#0D9488']
+        : ['#5EEAD4', '#14B8A6'],
+      gradientTeal: ['#14B8A6', '#06B6D4'], // Teal to Cyan
       gradientSuccess: ['#10B981', '#059669'],
       gradientWarning: ['#F59E0B', '#D97706'],
+      gradientSky: ['#0EA5E9', '#0284C7'], // Sky blue gradient
     },
 
     // Neon accent system

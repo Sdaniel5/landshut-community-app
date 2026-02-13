@@ -208,10 +208,9 @@ export default function DashboardScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <MapHeaderCard 
+      <MapHeaderCard
         reports={reports}
         onExpand={handleExpandMap}
-        isDark={isDark}
       />
       
       <BlitzerFeedList
