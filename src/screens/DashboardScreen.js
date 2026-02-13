@@ -257,8 +257,20 @@ export default function DashboardScreen({ navigation }) {
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  { 
-                    backgroundColor: formData.type === 'blitzer' ? theme.colors.primary : theme.colors.border
+                  {
+                    backgroundColor: formData.type === 'blitzer'
+                      ? `${theme.neon.blitzer.primary}30`
+                      : theme.colors.border,
+                    borderColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.primary
+                      : 'transparent',
+                    borderWidth: 2,
+                    shadowColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.glow
+                      : 'transparent',
+                    shadowOpacity: formData.type === 'blitzer' ? 0.6 : 0,
+                    shadowRadius: 8,
+                    elevation: formData.type === 'blitzer' ? 6 : 0,
                   }
                 ]}
                 onPress={() => {
@@ -267,8 +279,10 @@ export default function DashboardScreen({ navigation }) {
                   setLicenseWarningAccepted(false);
                 }}
               >
-                <Text style={[styles.typeButtonText, { 
-                  color: formData.type === 'blitzer' ? '#FFF' : theme.colors.text 
+                <Text style={[styles.typeButtonText, {
+                  color: formData.type === 'blitzer'
+                    ? theme.neon.blitzer.primary
+                    : theme.colors.text
                 }]}>
                   📸 Blitzer
                 </Text>
@@ -276,16 +290,30 @@ export default function DashboardScreen({ navigation }) {
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  { 
-                    backgroundColor: formData.type === 'zivilstreife' ? theme.colors.primary : theme.colors.border
+                  {
+                    backgroundColor: formData.type === 'zivilstreife'
+                      ? `${theme.neon.zivilstreife.primary}30`
+                      : theme.colors.border,
+                    borderColor: formData.type === 'zivilstreife'
+                      ? theme.neon.zivilstreife.primary
+                      : 'transparent',
+                    borderWidth: 2,
+                    shadowColor: formData.type === 'zivilstreife'
+                      ? theme.neon.zivilstreife.glow
+                      : 'transparent',
+                    shadowOpacity: formData.type === 'zivilstreife' ? 0.6 : 0,
+                    shadowRadius: 8,
+                    elevation: formData.type === 'zivilstreife' ? 6 : 0,
                   }
                 ]}
                 onPress={() => {
                   setFormData({ ...formData, type: 'zivilstreife' });
                 }}
               >
-                <Text style={[styles.typeButtonText, { 
-                  color: formData.type === 'zivilstreife' ? '#FFF' : theme.colors.text 
+                <Text style={[styles.typeButtonText, {
+                  color: formData.type === 'zivilstreife'
+                    ? theme.neon.zivilstreife.primary
+                    : theme.colors.text
                 }]}>
                   👮 Zivilstreife
                 </Text>
@@ -339,7 +367,20 @@ export default function DashboardScreen({ navigation }) {
                 <Text style={[styles.buttonText, { color: theme.colors.text }]}>Abbrechen</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.button, { backgroundColor: theme.colors.primary }]}
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.primary
+                      : theme.neon.zivilstreife.primary,
+                    shadowColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.glow
+                      : theme.neon.zivilstreife.glow,
+                    shadowOpacity: 0.7,
+                    shadowRadius: 10,
+                    elevation: 8,
+                  }
+                ]}
                 onPress={handleSubmitReport}
               >
                 <Text style={[styles.buttonText, { color: '#FFF' }]}>Melden</Text>

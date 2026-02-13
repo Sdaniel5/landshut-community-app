@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
+import { NEON_COLORS } from '../constants/neonColors';
 
 const ThemeContext = createContext();
 
@@ -65,20 +66,29 @@ export const ThemeProvider = ({ children }) => {
       error: '#F44336',
       info: '#2196F3',
       
-      // Glassmorphism
-      glassBackground: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-      glassBorder: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-      
+      // Glassmorphism (Enhanced for "Glass-for-me")
+      glassBackground: isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.7)',
+      glassBorder: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+
       // Overlay
       overlay: 'rgba(0, 0, 0, 0.5)',
       overlayLight: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
     },
+
+    // Neon accent system
+    neon: {
+      blitzer: NEON_COLORS.blitzer,
+      zivilstreife: NEON_COLORS.zivilstreife,
+      accent: NEON_COLORS.accent,
+      neutral: NEON_COLORS.neutral,
+    },
     
-    // Glassmorphism styles
+    // Enhanced Glassmorphism styles
     glass: {
-      background: isDark ? 'rgba(30, 30, 30, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-      borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+      background: isDark ? 'rgba(20, 20, 20, 0.85)' : 'rgba(255, 255, 255, 0.7)',
+      borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
       borderWidth: 1,
+      blurIntensity: 100, // Increased from 80
     },
     
     // Shadow styles

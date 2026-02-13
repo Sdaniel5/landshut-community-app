@@ -1,44 +1,68 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import NeonGlassCard from './NeonGlassCard';
+import { useTheme } from '../contexts/ThemeContext';
 
-export default function BlitzerFeedItem({ report, onVote, onPress, isDark }) {
+export default function BlitzerFeedItem({ report, onVote, onPress }) {
+  const { theme } = useTheme();
+
   const timeAgo = (timestamp) => {
     const now = new Date();
     const created = new Date(timestamp);
     const diffMs = now - created;
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return 'Gerade eben';
     if (diffMins < 60) return `Vor ${diffMins} Min`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `Vor ${diffHours} Std`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `Vor ${diffDays} Tag${diffDays > 1 ? 'en' : ''}`;
   };
 
+  // Enable pulse animation for reports less than 30 seconds old
+  const isNew = () => {
+    const now = new Date();
+    const created = new Date(report.created_at);
+    const diffSeconds = (now - created) / 1000;
+    return diffSeconds < 30;
+  };
+
   const icon = report.type === 'blitzer' ? 'camera' : 'shield';
-  const iconColor = report.type === 'blitzer' ? '#FF5252' : '#FFA726';
+  const neonColor = report.type === 'blitzer'
+    ? theme.neon.blitzer.primary
+    : theme.neon.zivilstreife.primary;
+
   const sourceBadge = report.source === 'whatsapp' ? 'WhatsApp' : 'Manuell';
   const sourceBadgeColor = report.source === 'whatsapp' ? '#25D366' : '#2196F3';
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.card,
-        { backgroundColor: isDark ? '#1E1E1E' : '#FFFFFF' }
-      ]}
-      onPress={onPress}
-      activeOpacity={0.7}
+    <NeonGlassCard
+      type={report.type}
+      glowIntensity={0.5}
+      animated={isNew()}
+      animationDuration={2000}
+      style={styles.cardContainer}
     >
+      <TouchableOpacity
+        onPress={onPress}
+        activeOpacity={0.7}
+        style={styles.cardContent}
+      >
       <View style={styles.header}>
-        <View style={styles.iconContainer}>
-          <Ionicons name={icon} size={24} color={iconColor} />
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: `${neonColor}20` } // 20% opacity
+          ]}
+        >
+          <Ionicons name={icon} size={24} color={neonColor} />
         </View>
         <View style={styles.headerText}>
-          <Text style={[styles.street, { color: isDark ? '#FFF' : '#000' }]}>
+          <Text style={[styles.street, { color: theme.colors.text }]}>
             {report.street}
           </Text>
           <View style={styles.meta}>
@@ -51,8 +75,8 @@ export default function BlitzerFeedItem({ report, onVote, onPress, isDark }) {
       </View>
 
       {report.description && (
-        <Text 
-          style={[styles.description, { color: isDark ? '#AAA' : '#666' }]}
+        <Text
+          style={[styles.description, { color: theme.colors.textSecondary }]}
           numberOfLines={2}
         >
           {report.description}
@@ -60,29 +84,31 @@ export default function BlitzerFeedItem({ report, onVote, onPress, isDark }) {
       )}
 
       <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.voteButton}
+        <TouchableOpacity
+          style={[
+            styles.voteButton,
+            { backgroundColor: `${neonColor}20` }
+          ]}
           onPress={() => onVote(report.id)}
         >
-          <Ionicons name="thumbs-up-outline" size={18} color="#2196F3" />
-          <Text style={styles.voteText}>{report.votes}/15 Votes</Text>
+          <Ionicons name="thumbs-up-outline" size={18} color={neonColor} />
+          <Text style={[styles.voteText, { color: neonColor }]}>
+            {report.votes}/15 Votes
+          </Text>
         </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </NeonGlassCard>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: 12,
-    padding: 15,
+  cardContainer: {
     marginHorizontal: 15,
     marginVertical: 8,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+  },
+  cardContent: {
+    padding: 15,
   },
   header: {
     flexDirection: 'row',
@@ -93,7 +119,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(33, 150, 243, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -138,13 +163,11 @@ const styles = StyleSheet.create({
   voteButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(33, 150, 243, 0.1)',
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
   voteText: {
-    color: '#2196F3',
     fontSize: 14,
     fontWeight: 'bold',
     marginLeft: 6,

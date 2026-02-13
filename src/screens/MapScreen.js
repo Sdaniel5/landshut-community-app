@@ -7,7 +7,6 @@ import {
   Modal,
   TextInput,
   ScrollView,
-  useColorScheme,
   Alert,
   ActivityIndicator,
 } from 'react-native';
@@ -16,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { supabase } from '../lib/supabase';
 import { sendLocalNotification } from '../lib/notifications';
+import { useTheme } from '../contexts/ThemeContext';
 
 const LANDSHUT_COORDS = {
   latitude: 48.5376,
@@ -25,8 +25,7 @@ const LANDSHUT_COORDS = {
 };
 
 export default function MapScreen() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { theme, isDark } = useTheme();
   const mapRef = useRef(null);
 
   const [reports, setReports] = useState([]);
@@ -241,20 +240,60 @@ export default function MapScreen() {
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  formData.type === 'blitzer' && styles.typeButtonActive,
+                  {
+                    backgroundColor: formData.type === 'blitzer'
+                      ? `${theme.neon.blitzer.primary}30`
+                      : theme.colors.border,
+                    borderColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.primary
+                      : 'transparent',
+                    borderWidth: 2,
+                    shadowColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.glow
+                      : 'transparent',
+                    shadowOpacity: formData.type === 'blitzer' ? 0.6 : 0,
+                    shadowRadius: 8,
+                    elevation: formData.type === 'blitzer' ? 6 : 0,
+                  }
                 ]}
                 onPress={() => setFormData({ ...formData, type: 'blitzer' })}
               >
-                <Text style={styles.typeButtonText}>📸 Blitzer</Text>
+                <Text style={[styles.typeButtonText, {
+                  color: formData.type === 'blitzer'
+                    ? theme.neon.blitzer.primary
+                    : theme.colors.text
+                }]}>
+                  📸 Blitzer
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.typeButton,
-                  formData.type === 'zivilstreife' && styles.typeButtonActive,
+                  {
+                    backgroundColor: formData.type === 'zivilstreife'
+                      ? `${theme.neon.zivilstreife.primary}30`
+                      : theme.colors.border,
+                    borderColor: formData.type === 'zivilstreife'
+                      ? theme.neon.zivilstreife.primary
+                      : 'transparent',
+                    borderWidth: 2,
+                    shadowColor: formData.type === 'zivilstreife'
+                      ? theme.neon.zivilstreife.glow
+                      : 'transparent',
+                    shadowOpacity: formData.type === 'zivilstreife' ? 0.6 : 0,
+                    shadowRadius: 8,
+                    elevation: formData.type === 'zivilstreife' ? 6 : 0,
+                  }
                 ]}
                 onPress={() => setFormData({ ...formData, type: 'zivilstreife' })}
               >
-                <Text style={styles.typeButtonText}>👮 Zivilstreife</Text>
+                <Text style={[styles.typeButtonText, {
+                  color: formData.type === 'zivilstreife'
+                    ? theme.neon.zivilstreife.primary
+                    : theme.colors.text
+                }]}>
+                  👮 Zivilstreife
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -284,10 +323,23 @@ export default function MapScreen() {
                 <Text style={styles.buttonText}>Abbrechen</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.button, styles.buttonSubmit]}
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.primary
+                      : theme.neon.zivilstreife.primary,
+                    shadowColor: formData.type === 'blitzer'
+                      ? theme.neon.blitzer.glow
+                      : theme.neon.zivilstreife.glow,
+                    shadowOpacity: 0.7,
+                    shadowRadius: 10,
+                    elevation: 8,
+                  }
+                ]}
                 onPress={handleSubmitReport}
               >
-                <Text style={styles.buttonText}>Melden</Text>
+                <Text style={[styles.buttonText, { color: '#FFF' }]}>Melden</Text>
               </TouchableOpacity>
             </View>
           </View>
