@@ -71,16 +71,17 @@ export default function MapHeaderCard({ reports, onExpand, isDark }) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    height: 200,
-    borderRadius: 15,
+    height: 240,
+    borderRadius: 20,
     overflow: 'hidden',
     marginHorizontal: 15,
-    marginVertical: 10,
-    elevation: 3,
+    marginTop: 15,
+    marginBottom: 10,
+    elevation: 6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   compactMap: {
     flex: 1,
