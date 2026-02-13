@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { MotiView } from 'moti';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated } from 'react-native';
 import GlassCard from './GlassCard';
 import { useTheme } from '../contexts/ThemeContext';
 import { getNeonColorForType } from '../constants/neonColors';
@@ -26,24 +25,40 @@ export default function NeonGlassCard({
   ...props
 }) {
   const { theme } = useTheme();
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   // Get neon colors based on type
   const neonColors = type ? getNeonColorForType(type) : theme.neon.accent;
   const glowColor = neonColors.glow;
 
+  useEffect(() => {
+    if (animated) {
+      // Pulse animation
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(scaleAnim, {
+            toValue: 1.02,
+            duration: animationDuration / 2,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: animationDuration / 2,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }
+  }, [animated, animationDuration, scaleAnim]);
+
   return (
-    <MotiView
-      from={{ opacity: animated ? 0.9 : 1, scale: 1 }}
-      animate={{
-        opacity: 1,
-        scale: animated ? [1, 1.02, 1] : 1,
-      }}
-      transition={{
-        type: 'timing',
-        duration: animationDuration,
-        loop: animated,
-      }}
-      style={style}
+    <Animated.View
+      style={[
+        style,
+        {
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}
     >
       <GlassCard
         neonGlow={glowColor}
@@ -59,7 +74,7 @@ export default function NeonGlassCard({
       >
         {children}
       </GlassCard>
-    </MotiView>
+    </Animated.View>
   );
 }
 
